@@ -95,9 +95,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 18.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SizedBox(
-                      height: 150,
+                    // SizedBox(
+                    //   height: 150,
+                    // ),
+                    Icon(
+                      Icons.data_exploration,
+                      size: 169,
                     ),
                     CredAiHeader(),
                     SizedBox(

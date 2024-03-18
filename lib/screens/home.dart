@@ -75,7 +75,14 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           body: const Padding(
             padding: EdgeInsets.all(8.0),
-            child: HomePageContents(),
+            child: SingleChildScrollView(child: HomePageContents()),
+          ),
+          floatingActionButton: IconButton(
+            icon: Icon(
+              Icons.chat_bubble,
+              size: 40,
+            ),
+            onPressed: () {},
           ),
         );
       },
