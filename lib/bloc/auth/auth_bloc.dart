@@ -38,6 +38,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             response.data as APIModel<LoginResponse>;
         final AccessToken tkn = res.response.tkn;
         await _storage.write(key: "accToken", value: tkn.accToken);
+        await _storage.write(key: "rfToken", value: tkn.rfToken);
 
         emit(AuthApifullfilled());
         emit(userIsLoggedIn());

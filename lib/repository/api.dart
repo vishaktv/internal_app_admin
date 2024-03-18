@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
+import 'package:internal_app/model/onboarding_statatics.dart';
 import 'package:internal_app/model/todoapimodel.dart';
 
 import '../config/dio_config.dart';
@@ -44,6 +45,23 @@ class ApiRepository {
     APIModel<LoginResponse> responseData = APIModel<LoginResponse>.fromMap(
         userData, (map) => LoginResponse.fromMap(map));
 
+    return Response(
+        data: responseData,
+        statusCode: response.statusCode,
+        requestOptions: RequestOptions());
+  }
+
+  Future<Response<APIModel<OnboardingStatisticsRes>>> onboardingStatistics(
+      OnboardingStatisticsReq date) async {
+    final response = await appInterceptor.dio.post(
+        "/general/getEnrollmentStatus",
+        data: {"fromDate": date.fromDate, "toDate": date.toDate},
+        options: Options(headers: {"purpose": "test "}));
+    final userData = response.data;
+    APIModel<OnboardingStatisticsRes> responseData =
+        APIModel<OnboardingStatisticsRes>.fromMap(
+            userData, (map) => OnboardingStatisticsRes.fromMap(map));
+    print(userData);
     return Response(
         data: responseData,
         statusCode: response.statusCode,

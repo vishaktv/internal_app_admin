@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:internal_app/bloc/Admin/admin_bloc.dart';
 import 'package:internal_app/bloc/auth/auth_bloc.dart';
 import 'package:internal_app/components/cred_ai_title.dart';
 import 'package:internal_app/page_contents/Home_page_contents.dart';
@@ -20,8 +21,8 @@ class _HomeScreenState extends State<HomeScreen> {
   final storage = new FlutterSecureStorage();
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    context.read<AdminBloc>().add(AdminOnbStataticsApiEvent());
   }
 
   Future<bool> deleteToken() async {
@@ -48,7 +49,6 @@ class _HomeScreenState extends State<HomeScreen> {
         }
       },
       builder: (context, state) {
-        print(state);
         return Scaffold(
           appBar: AppBar(
             forceMaterialTransparency: true,

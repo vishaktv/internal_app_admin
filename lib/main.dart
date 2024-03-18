@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:internal_app/bloc/Admin/admin_bloc.dart';
 import 'package:internal_app/bloc/auth/auth_bloc.dart';
 import 'package:internal_app/screens/index.dart';
 
@@ -8,7 +9,10 @@ void main() {
     providers: [
       BlocProvider<AuthBloc>(
         create: (BuildContext context) => AuthBloc(),
-      )
+      ),
+      BlocProvider<AdminBloc>(
+        create: (BuildContext context) => AdminBloc(),
+      ),
     ],
     child: const MyApp(),
   ));

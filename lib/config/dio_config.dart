@@ -1,19 +1,24 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class AppInterceptor {
   Dio dio = Dio();
+  final storage = new FlutterSecureStorage();
   static String baseUrl = "https://rj-admin-dashboard-dev.cred-intg.net/radb";
 
   AppInterceptor() {
     dio.options =
         BaseOptions(contentType: 'application/json', baseUrl: baseUrl);
-
     dio.interceptors.add(InterceptorsWrapper(
-      onRequest:
-          (RequestOptions requestOptions, RequestInterceptorHandler handler) {
+      onRequest: (RequestOptions requestOptions,
+          RequestInterceptorHandler handler) async {
+        String? token = await storage.read(key: "accToken");
+        String? token2 = await storage.read(key: "rfToken");
+        print(token);
         if (!requestOptions.uri.toString().contains("/authenticate") &&
-            !requestOptions.uri.toString().contains("/refresh")) {
-          requestOptions.headers['Authorization'] = 'Bearer ghjcyghfjhg';
+            !requestOptions.uri.toString().contains("/refresh") &&
+            token != null) {
+          requestOptions.headers['Authorization'] = 'Bearer $token2';
         }
         handler.next(requestOptions);
       },

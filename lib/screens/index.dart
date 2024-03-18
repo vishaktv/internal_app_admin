@@ -16,7 +16,7 @@ class IndexPage extends StatefulWidget {
 }
 
 class _IndexPageState extends State<IndexPage> {
-  final storage = new FlutterSecureStorage();
+  // final storage = new FlutterSecureStorage();
   final ApiRepository apiCall = ApiRepository();
   int currentPage = 0;
   final PageController pageController = PageController();

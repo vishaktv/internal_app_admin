@@ -49,8 +49,6 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _obscureText = true;
   @override
   Widget build(BuildContext context) {
-    final mediaQuery = MediaQuery.of(context);
-
     return Scaffold(
       extendBodyBehindAppBar: true,
       body: BlocConsumer<AuthBloc, AuthState>(
