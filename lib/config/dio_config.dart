@@ -13,12 +13,11 @@ class AppInterceptor {
       onRequest: (RequestOptions requestOptions,
           RequestInterceptorHandler handler) async {
         String? token = await storage.read(key: "accToken");
-        String? token2 = await storage.read(key: "rfToken");
-        print(token);
         if (!requestOptions.uri.toString().contains("/authenticate") &&
             !requestOptions.uri.toString().contains("/refresh") &&
             token != null) {
-          requestOptions.headers['Authorization'] = 'Bearer $token2';
+          requestOptions.headers['Authorization'] = 'Bearer $token';
+          requestOptions.headers['accept'] = 'application/json';
         }
         handler.next(requestOptions);
       },
@@ -27,7 +26,7 @@ class AppInterceptor {
         String requestUrl = err.requestOptions.uri.toString();
         if (err.response?.statusCode == 401) {
           print("error vannu");
-          if (requestUrl != "/authenticate" || requestUrl != "/refersh") {}
+          if (requestUrl != "/authenticate" || requestUrl != "/refresh") {}
         }
         handler.next(err);
       },

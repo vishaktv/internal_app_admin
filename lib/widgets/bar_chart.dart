@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:internal_app/bloc/Admin/admin_bloc.dart';
 
 final List<String> list = <String>['Cred', 'Siren', 'Chipotle', 'Four'];
 
@@ -35,54 +37,78 @@ class BarChartSample1State extends State<BarChartSample> {
 
   @override
   Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: 1,
-      child: Stack(
-        children: <Widget>[
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              const SizedBox(
-                height: 5,
-              ),
-              Align(
-                alignment: Alignment.topRight,
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 8.0),
-                  child: DropdownMenu<String>(
-                    width: 100,
-                    inputDecorationTheme: InputDecorationTheme(
-                        border: InputBorder.none, fillColor: Colors.grey),
-                    initialSelection: list.first,
-                    onSelected: (String? value) {
-                      setState(() {
-                        dropdownValue = value!;
-                      });
-                    },
-                    dropdownMenuEntries:
-                        list.map<DropdownMenuEntry<String>>((String value) {
-                      return DropdownMenuEntry<String>(
-                          value: value, label: value);
-                    }).toList(),
-                  ),
+    // final int complete=context.read()
+    return BlocBuilder<AdminBloc, AdminState>(
+      builder: (context, state) {
+        if (state is ApiFullFilled) {
+          final double completed =
+              (state as ApiFullFilled).onbRes.completed.toDouble();
+          print(completed);
+          final double failure =
+              (state as ApiFullFilled).onbRes.failure.toDouble();
+          print(failure);
+          final double underReview =
+              (state as ApiFullFilled).onbRes.underReview.toDouble();
+          print(underReview);
+          final double inProgress =
+              (state as ApiFullFilled).onbRes.inProgress.toDouble();
+          print(inProgress);
+          return AspectRatio(
+            aspectRatio: 1,
+            child: Stack(
+              children: <Widget>[
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: DropdownMenu<String>(
+                          width: 100,
+                          inputDecorationTheme: InputDecorationTheme(
+                              border: InputBorder.none, fillColor: Colors.grey),
+                          initialSelection: list.first,
+                          onSelected: (String? value) {
+                            setState(() {
+                              dropdownValue = value!;
+                            });
+                          },
+                          dropdownMenuEntries: list
+                              .map<DropdownMenuEntry<String>>((String value) {
+                            return DropdownMenuEntry<String>(
+                                value: value, label: value);
+                          }).toList(),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        child: BarChart(
+                          isPlaying
+                              ? randomData()
+                              : mainBarData(
+                                  completed, failure, underReview, inProgress),
+                          swapAnimationDuration: animDuration,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 12,
+                    ),
+                  ],
                 ),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: BarChart(
-                    isPlaying ? randomData() : mainBarData(),
-                    swapAnimationDuration: animDuration,
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 12,
-              ),
-            ],
-          ),
-        ],
-      ),
+              ],
+            ),
+          );
+        } else {
+          return Container();
+        }
+      },
     );
   }
 
@@ -115,26 +141,29 @@ class BarChartSample1State extends State<BarChartSample> {
     );
   }
 
-  List<BarChartGroupData> showingGroups() => List.generate(4, (i) {
+  List<BarChartGroupData> showingGroups(double completed, double failure,
+          double underReview, double inProgress) =>
+      List.generate(4, (i) {
         switch (i) {
           case 0:
-            return makeGroupData(0, 300,
+            return makeGroupData(0, completed,
                 isTouched: i == touchedIndex, barColor: Colors.green.shade300);
           case 1:
-            return makeGroupData(1, 130,
+            return makeGroupData(1, failure,
                 isTouched: i == touchedIndex, barColor: Colors.red.shade400);
           case 2:
-            return makeGroupData(2, 90,
+            return makeGroupData(2, underReview,
                 isTouched: i == touchedIndex, barColor: Colors.orange.shade300);
           case 3:
-            return makeGroupData(3, 60,
+            return makeGroupData(3, inProgress,
                 isTouched: i == touchedIndex, barColor: Colors.blue.shade300);
           default:
             return throw Error();
         }
       });
 
-  BarChartData mainBarData() {
+  BarChartData mainBarData(
+      double completed, double failure, double underReview, double inProgress) {
     return BarChartData(
       barTouchData: BarTouchData(
         touchTooltipData: BarTouchTooltipData(
@@ -213,7 +242,7 @@ class BarChartSample1State extends State<BarChartSample> {
       borderData: FlBorderData(
         show: false,
       ),
-      barGroups: showingGroups(),
+      barGroups: showingGroups(completed, failure, underReview, inProgress),
       gridData: const FlGridData(show: false),
     );
   }

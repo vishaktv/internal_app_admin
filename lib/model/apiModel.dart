@@ -2,11 +2,11 @@ import 'auth_api_model.dart';
 
 class APIModel<T> {
   final T response;
-  final Message message;
+  final Message? message;
 
   APIModel({
     required this.response,
-    required this.message,
+    this.message,
   });
 
   APIModel<T> copyWith({
@@ -33,11 +33,20 @@ class APIModel<T> {
   int get hashCode => response.hashCode ^ message.hashCode;
 
   // Named constructor for creating an instance from a map
+  // factory APIModel.fromMap(
+  //     Map<String, dynamic> map, T Function(Map<String, dynamic>) fromMapT) {
+  //   return APIModel<T>(
+  //     response: fromMapT(map['response']),
+  //     message: Message.fromMap(map['message'] as Map<String, dynamic>),
+  //   );
+  // }
   factory APIModel.fromMap(
       Map<String, dynamic> map, T Function(Map<String, dynamic>) fromMapT) {
     return APIModel<T>(
-      response: fromMapT(map['response']),
-      message: Message.fromMap(map['message'] as Map<String, dynamic>),
+      response: fromMapT(map['response'] as Map<String, dynamic>),
+      message: map['message'] != null
+          ? Message.fromMap(map['message'] as Map<String, dynamic>)
+          : null,
     );
   }
 }
@@ -49,15 +58,3 @@ class MyResponseType {
     // Implementation to convert the map to MyResponseType
   }
 }
-
-// Example usage:
-// void main() {
-//   Map<String, dynamic> mapData = {/* Your map data here */};
-
-//   APIModel<MyResponseType> myResponseModel = APIModel<MyResponseType>.fromMap(
-//     mapData,
-//     (map) => MyResponseType.fromMap(map),
-//   );
-
-//   print(myResponseModel);
-// }

@@ -53,15 +53,13 @@ class ApiRepository {
 
   Future<Response<APIModel<OnboardingStatisticsRes>>> onboardingStatistics(
       OnboardingStatisticsReq date) async {
-    final response = await appInterceptor.dio.post(
-        "/general/getEnrollmentStatus",
+    final response = await appInterceptor.dio.post("/getEnrollmentStatus",
         data: {"fromDate": date.fromDate, "toDate": date.toDate},
         options: Options(headers: {"purpose": "test "}));
     final userData = response.data;
     APIModel<OnboardingStatisticsRes> responseData =
         APIModel<OnboardingStatisticsRes>.fromMap(
             userData, (map) => OnboardingStatisticsRes.fromMap(map));
-    print(userData);
     return Response(
         data: responseData,
         statusCode: response.statusCode,
