@@ -35,8 +35,7 @@ class _TabPanelSectionState extends State<TabPanelSection> {
         if (state is ApiLoadedState) {
           return Container(
             child: ListView.builder(
-              itemCount: state.filteredApis
-                  .length, // Set itemCount to 0 if state is not ApiLoadedState
+              itemCount: state.filteredApis.length,
               itemBuilder: (context, index) {
                 // if (state is ApiLoadedState) {
                 final api = state.filteredApis[index];
