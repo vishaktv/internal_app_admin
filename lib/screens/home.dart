@@ -51,60 +51,60 @@ class _HomeScreenState extends State<HomeScreen> {
       builder: (context, state) {
         return BlocBuilder<AdminBloc, AdminState>(
           builder: (context, state) {
-            if (state is ApiLoading) {
-              return Center(
-                child: Container(
-                  height: 50,
-                  width: 50,
-                  child: CircularProgressIndicator(
-                    color: Colors.white,
-                  ),
-                ),
-              );
-            } else if (state is ApiFullFilled) {
-              return Scaffold(
-                appBar: AppBar(
-                  forceMaterialTransparency: true,
-                  scrolledUnderElevation: 2,
-                  backgroundColor: Colors.transparent,
-                  title: CredAiHeader(),
-                  leading: IconButton(
-                    icon: Icon(
-                      Icons.menu,
-                      size: 36,
-                    ),
-                    onPressed: () {},
-                  ),
-                  actions: [
-                    IconButton(
-                        onPressed: () async {
-                          final bool tokendeleted = await deleteToken();
-                          if (tokendeleted) {
-                            context
-                                .read<AuthBloc>()
-                                .add(AuthSessionHandlingEvent());
-                          }
-                        },
-                        icon: Icon(Icons.login_outlined))
-                  ],
-                ),
-                body: const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: SingleChildScrollView(child: HomePageContents()),
-                ),
-                floatingActionButton: IconButton(
+            // if (state is ApiLoading) {
+            //   return Center(
+            //     child: Container(
+            //       height: 50,
+            //       width: 50,
+            //       child: CircularProgressIndicator(
+            //         color: Colors.white,
+            //       ),
+            //     ),
+            //   );
+            // } else if (state is ApiFullFilled) {
+            return Scaffold(
+              appBar: AppBar(
+                forceMaterialTransparency: true,
+                scrolledUnderElevation: 2,
+                backgroundColor: Colors.transparent,
+                title: CredAiHeader(),
+                leading: IconButton(
                   icon: Icon(
-                    Icons.chat_bubble,
-                    size: 40,
+                    Icons.menu,
+                    size: 36,
                   ),
                   onPressed: () {},
                 ),
-              );
-            } else {
-              return Center(
-                child: Text("something went wrong"),
-              );
-            }
+                actions: [
+                  IconButton(
+                      onPressed: () async {
+                        final bool tokendeleted = await deleteToken();
+                        if (tokendeleted) {
+                          context
+                              .read<AuthBloc>()
+                              .add(AuthSessionHandlingEvent());
+                        }
+                      },
+                      icon: Icon(Icons.login_outlined))
+                ],
+              ),
+              body: const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: SingleChildScrollView(child: HomePageContents()),
+              ),
+              floatingActionButton: IconButton(
+                icon: Icon(
+                  Icons.chat_bubble,
+                  size: 40,
+                ),
+                onPressed: () {},
+              ),
+            );
+            // } else {
+            //   return Center(
+            //     child: Text("something went wrong"),
+            //   );
+            // }
           },
         );
       },

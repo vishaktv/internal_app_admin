@@ -25,10 +25,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Cred internal App',
       theme: ThemeData(
-        colorScheme: ColorScheme.dark(),
+        colorScheme: const ColorScheme.dark(),
         useMaterial3: true,
       ),
-      home: IndexPage(),
+      home: const IndexPage(),
     );
   }
 }

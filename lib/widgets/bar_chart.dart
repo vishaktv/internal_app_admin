@@ -4,6 +4,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:internal_app/bloc/Admin/admin_bloc.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 final List<String> list = <String>['Cred', 'Siren', 'Chipotle', 'Four'];
 
@@ -34,26 +35,27 @@ class BarChartSample1State extends State<BarChartSample> {
   int touchedIndex = -1;
 
   bool isPlaying = false;
-
+  late double completed = 5.0;
+  late double failure = 10.0;
+  late double underReview = 5.0;
+  late double inProgress = 0.0;
   @override
   Widget build(BuildContext context) {
-    // final int complete=context.read()
-    return BlocBuilder<AdminBloc, AdminState>(
-      builder: (context, state) {
+    ;
+    return BlocConsumer<AdminBloc, AdminState>(
+      listener: (context, state) {
         if (state is ApiFullFilled) {
-          final double completed =
-              (state as ApiFullFilled).onbRes.completed.toDouble();
-          print(completed);
-          final double failure =
-              (state as ApiFullFilled).onbRes.failure.toDouble();
-          print(failure);
-          final double underReview =
-              (state as ApiFullFilled).onbRes.underReview.toDouble();
-          print(underReview);
-          final double inProgress =
-              (state as ApiFullFilled).onbRes.inProgress.toDouble();
-          print(inProgress);
-          return AspectRatio(
+          completed = state.onbRes.completed.toDouble();
+          failure = state.onbRes.failure.toDouble();
+          underReview = state.onbRes.underReview.toDouble();
+          inProgress = state.onbRes.inProgress.toDouble();
+        }
+      },
+      builder: (context, state) {
+        return Skeletonizer(
+          containersColor: Color.fromARGB(171, 238, 238, 238),
+          enabled: state is ApiLoading,
+          child: AspectRatio(
             aspectRatio: 1,
             child: Stack(
               children: <Widget>[
@@ -73,6 +75,10 @@ class BarChartSample1State extends State<BarChartSample> {
                               border: InputBorder.none, fillColor: Colors.grey),
                           initialSelection: list.first,
                           onSelected: (String? value) {
+                            print(value);
+                            context
+                                .read<AdminBloc>()
+                                .add(AdminOnbStataticsApiEvent());
                             setState(() {
                               dropdownValue = value!;
                             });
@@ -104,10 +110,11 @@ class BarChartSample1State extends State<BarChartSample> {
                 ),
               ],
             ),
-          );
-        } else {
-          return Container();
-        }
+          ),
+        );
+        // } else {
+        //   return Container();
+        // }
       },
     );
   }
@@ -236,7 +243,8 @@ class BarChartSample1State extends State<BarChartSample> {
           ),
         ),
         leftTitles: const AxisTitles(
-          sideTitles: SideTitles(showTitles: true, reservedSize: 40),
+          sideTitles:
+              SideTitles(showTitles: true, reservedSize: 40, interval: 30),
         ),
       ),
       borderData: FlBorderData(
